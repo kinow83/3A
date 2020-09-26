@@ -143,6 +143,8 @@ CREATE TABLE IF NOT EXISTS radpostauth (
   username varchar(64) NOT NULL default '',
   pass varchar(64) NOT NULL default '',
   reply varchar(32) NOT NULL default '',
+  result tinyint default 0,
+  reason varchar(200) default NULL,
   authdate timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY  (id),
   KEY username (username(32))

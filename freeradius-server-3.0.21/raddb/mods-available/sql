@@ -37,7 +37,7 @@ sql {
 	#	sqlite
 	#	mongo
 	#
-	dialect = "sqlite"
+	dialect = "mysql"
 
 	#
 	#  The driver module used to execute the queries.  Since we
@@ -57,8 +57,7 @@ sql {
 	#	rlm_sql_iodbc
 	#	rlm_sql_unixodbc
 	#
-	driver = "rlm_sql_null"
-#	driver = "rlm_sql_${dialect}"
+	driver = "rlm_sql_${dialect}"
 
 	#
 	#  Driver-specific subsections.  They will only be loaded and
@@ -83,17 +82,17 @@ sql {
 
 	mysql {
 		# If any of the files below are set, TLS encryption is enabled
-		tls {
-			ca_file = "/etc/ssl/certs/my_ca.crt"
-			ca_path = "/etc/ssl/certs/"
-			certificate_file = "/etc/ssl/certs/private/client.crt"
-			private_key_file = "/etc/ssl/certs/private/client.key"
-			cipher = "DHE-RSA-AES256-SHA:AES128-SHA"
-
-			tls_required = yes
-			tls_check_cert = no
-			tls_check_cert_cn = no
-		}
+		# tls {
+		# 	ca_file = "/etc/ssl/certs/my_ca.crt"
+		# 	ca_path = "/etc/ssl/certs/"
+		# 	certificate_file = "/etc/ssl/certs/private/client.crt"
+		# 	private_key_file = "/etc/ssl/certs/private/client.key"
+		# 	cipher = "DHE-RSA-AES256-SHA:AES128-SHA"
+		# 
+		# 	tls_required = yes
+		# 	tls_check_cert = no
+		# 	tls_check_cert_cn = no
+		# }
 
 		# If yes, (or auto and libmysqlclient reports warnings are
 		# available), will retrieve and log additional warnings from
@@ -153,10 +152,10 @@ sql {
 
 	# Connection info:
 	#
-#	server = "localhost"
-#	port = 3306
-#	login = "radius"
-#	password = "radpass"
+	server = "localhost"
+	port = 3306
+	login = "radius"
+	password = "qwe123"
 
 	# Connection info for Mongo
 	# Authentication Without SSL
@@ -171,7 +170,7 @@ sql {
 	# server = mongodb://<DERIVED USERNAME>@192.168.0.2:PORT/DATABASE?authSource=$external&ssl=true&authMechanism=MONGODB-X509
 
 	# Database table configuration for everything except Oracle
-	radius_db = "radius"
+	radius_db = "raddb"
 
 	# If you are using Oracle then use this instead
 #	radius_db = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SID=your_sid)))"
