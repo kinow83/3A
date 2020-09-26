@@ -1,0 +1,26 @@
+1. 802.1x 
+ - AAA
+ - Vlan
+
+2. Manager
+ - User
+ - Group
+ - Device(?)
+
+3. Monitoring
+ - auth result log
+ - auth online
+ - account log
+
+4. DHCP 
+ - with radius
+
+5. 3rd party
+ - * REST-API
+ - LDAP/Active-Directory, MySQL(MariaDB), Oracle, etc(?)
+ - Web Service in SSO (PAP or GTC)
+
+
+6. Base
+ - Backup/Restore
+ - 
