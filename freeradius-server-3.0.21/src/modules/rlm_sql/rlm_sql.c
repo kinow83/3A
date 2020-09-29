@@ -1153,8 +1153,10 @@ static rlm_rcode_t mod_authorize(void *instance, REQUEST *request)
 	rad_assert(request->packet != NULL);
 	rad_assert(request->reply != NULL);
 
-	if (!inst->config->authorize_check_query && !inst->config->authorize_reply_query &&
-	    !inst->config->read_groups && !inst->config->read_profiles) {
+	if (!inst->config->authorize_check_query && 
+	    !inst->config->authorize_reply_query &&
+	    !inst->config->read_groups && 
+	    !inst->config->read_profiles) {
 		RWDEBUG("No authorization checks configured, returning noop");
 
 		return RLM_MODULE_NOOP;

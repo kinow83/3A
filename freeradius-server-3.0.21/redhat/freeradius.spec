@@ -32,19 +32,8 @@ Version: 3.0.21
 Release: 1%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Daemons
-URL: http://www.freeradius.org/
-
-Source0: ftp://ftp.freeradius.org/pub/radius/freeradius-server-%{version}.tar.bz2
-%if %{?_unitdir:1}%{!?_unitdir:0}
-Source100: radiusd.service
-Source104: freeradius-tmpfiles-conf
-%else
-Source100: freeradius-radiusd-init
-%define initddir %{?_initddir:%{_initddir}}%{!?_initddir:%{_initrddir}}
-%endif
-
-Source102: freeradius-logrotate
-Source103: freeradius-pam-conf
+URL: https://github.com/kinow83/3A
+Source0: freeradius-server-%{version}.tar.bz2
 
 Obsoletes: freeradius-devel
 Obsoletes: freeradius-libs
@@ -200,8 +189,8 @@ This plugin provides Python support for the FreeRADIUS server project.
 Summary: MySQL support for FreeRADIUS
 Group: System Environment/Daemons
 Requires: %{name} = %{version}-%{release}
-Requires: mysql
-BuildRequires: mysql-devel
+Requires: mariadb
+BuildRequires: mariadb-devel
 
 %description mysql
 This plugin provides MySQL support for the FreeRADIUS server project.
@@ -400,7 +389,7 @@ touch $RPM_BUILD_ROOT/var/log/radius/{radutmp,radius.log}
 # For systemd based systems, that define _unitdir, install the radiusd unit
 %if %{?_unitdir:1}%{!?_unitdir:0}
 install -D -m 755 redhat/radiusd.service $RPM_BUILD_ROOT/%{_unitdir}/radiusd.service
-install -D -m 644 %{SOURCE104} $RPM_BUILD_ROOT/%{_prefix}/lib/tmpfiles.d/radiusd.conf
+install -D -m 644 redhat/freeradius-tmpfiles-conf $RPM_BUILD_ROOT/%{_prefix}/lib/tmpfiles.d/radiusd.conf
 # For SystemV install the init script
 %else
 install -D -m 755 redhat/freeradius-radiusd-init $RPM_BUILD_ROOT/%{initddir}/radiusd

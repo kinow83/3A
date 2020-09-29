@@ -1,0 +1,98 @@
+[rhel-8-appstream-rhui-debug-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - AppStream from RHUI (Debug RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/appstream/debug
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[rhel-8-appstream-rhui-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - AppStream from RHUI (RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/appstream/os
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[rhel-8-appstream-rhui-source-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - AppStream from RHUI (Source RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/appstream/source/SRPMS
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[rhel-8-baseos-rhui-debug-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - BaseOS from RHUI (Debug RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/baseos/debug
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[rhel-8-baseos-rhui-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - BaseOS from RHUI (RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/baseos/os
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[rhel-8-baseos-rhui-source-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - BaseOS from RHUI (Source RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/8/$basearch/baseos/source/SRPMS
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[codeready-builder-for-rhel-8-rhui-debug-rpms]
+name=Red Hat CodeReady Linux Builder for RHEL 8 $basearch (Debug RPMs) from RHUI
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror//content/dist/rhel8/rhui/$releasever/$basearch/codeready-builder/debug
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[codeready-builder-for-rhel-8-rhui-rpms]
+name=Red Hat CodeReady Linux Builder for RHEL 8 $basearch (RPMs) from RHUI
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror//content/dist/rhel8/rhui/$releasever/$basearch/codeready-builder/os
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+[codeready-builder-for-rhel-8-rhui-source-rpms]
+name=Red Hat CodeReady Linux Builder for RHEL 8 $basearch (Source RPMs) from RHUI
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror//content/dist/rhel8/rhui/$releasever/$basearch/codeready-builder/source/SRPMS
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt

@@ -1,0 +1,5 @@
+[download-ib01.fedoraproject.org_pub_epel_8_Everything_x86_64]
+name=created by dnf config-manager from https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64
+baseurl=https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64
+enabled=1
+gpgcheck=0
