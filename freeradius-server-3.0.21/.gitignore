@@ -13,7 +13,6 @@
 *.rej
 .libs
 .depends
-*.log
 *.substvars
 *-stamp
 *.swp
