@@ -58,6 +58,7 @@ autom4te.cache
 config.guess
 config.sub
 config.h
+config.log
 src/main/radattr
 src/modules/lib/
 warnings.txt
@@ -67,3 +68,5 @@ warnings.txt
 
 # rpm packages
 rpmbuild/
+
+**/config.log

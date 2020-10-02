@@ -4790,9 +4790,7 @@ void wpas_dbus_unregister_p2p_group(struct wpa_supplicant *wpa_s,
 		return;
 
 	if (!wpa_s->dbus_groupobj_path) {
-		wpa_printf(MSG_DEBUG,
-			   "%s: Group object '%s' already unregistered",
-			   __func__, wpa_s->dbus_groupobj_path);
+		//wpa_printf(MSG_DEBUG, "%s: Group object '%s' already unregistered", __func__, wpa_s->dbus_groupobj_path);
 		return;
 	}
 

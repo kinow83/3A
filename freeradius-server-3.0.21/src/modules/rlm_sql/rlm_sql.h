@@ -229,7 +229,7 @@ struct sql_inst {
 	void			*handle;
 	rlm_sql_module_t	*module;
 
-	int (*sql_set_user)(rlm_sql_t *inst, REQUEST *request, char const *username);
+	int (*sql_set_user)(rlm_sql_t *inst, REQUEST *request, char **sqlusername, char const *username);
 	size_t (*sql_escape_func)(REQUEST *, char *out, size_t outlen, char const *in, void *arg);
 	sql_rcode_t (*sql_query)(rlm_sql_t *inst, REQUEST *request, rlm_sql_handle_t **handle, char const *query);
 	sql_rcode_t (*sql_select_query)(rlm_sql_t *inst, REQUEST *request, rlm_sql_handle_t **handle, char const *query);
@@ -254,5 +254,5 @@ sql_rcode_t	CC_HINT(nonnull (1, 3, 4)) rlm_sql_select_query(rlm_sql_t *inst, REQ
 sql_rcode_t	CC_HINT(nonnull (1, 3, 4)) rlm_sql_query(rlm_sql_t *inst, REQUEST *request, rlm_sql_handle_t **handle, char const *query);
 int		rlm_sql_fetch_row(rlm_sql_t *inst, REQUEST *request, rlm_sql_handle_t **handle);
 void		rlm_sql_print_error(rlm_sql_t *inst, REQUEST *request, rlm_sql_handle_t *handle, bool force_debug);
-int		sql_set_user(rlm_sql_t *inst, REQUEST *request, char const *username);
+int		sql_set_user(rlm_sql_t *inst, REQUEST *request, char **sqlusername, char const *username);
 #endif

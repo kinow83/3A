@@ -164,7 +164,7 @@ static ssize_t sql_xlat(void *instance, REQUEST *request, char const *query, cha
 	 *	We could search the string fmt for SQL-User-Name to see if this is
 	 * 	needed or not
 	 */
-	sql_set_user(inst, request, NULL);
+	sql_set_user(inst, request, NULL, NULL);
 
 	handle = fr_connection_get(inst->pool);	/* connection pool should produce error */
 	if (!handle) return 0;
@@ -512,7 +512,7 @@ static size_t sql_escape_for_xlat_func(REQUEST *request, char *out, size_t outle
  *	escape it twice. (it will make things wrong if we have an
  *	escape candidate character in the username)
  */
-int sql_set_user(rlm_sql_t *inst, REQUEST *request, char const *username)
+int sql_set_user(rlm_sql_t *inst, REQUEST *request, char **sqlusername, char const *username)
 {
 	char *expanded = NULL;
 	VALUE_PAIR *vp = NULL;
@@ -549,6 +549,10 @@ int sql_set_user(rlm_sql_t *inst, REQUEST *request, char const *username)
 	 */
 	fr_pair_delete_by_num(&request->packet->vps, vp->da->attr, vp->da->vendor, TAG_ANY);
 	fr_pair_add(&request->packet->vps, vp);
+
+	if (sqlusername) {
+		*sqlusername = strdup(vp->vp_strvalue);
+	}
 
 	return 0;
 }
@@ -646,7 +650,7 @@ static int sql_groupcmp(void *instance, REQUEST *request, UNUSED VALUE_PAIR *req
 	/*
 	 *	Set, escape, and check the user attr here
 	 */
-	if (sql_set_user(inst, request, NULL) < 0)
+	if (sql_set_user(inst, request, NULL, NULL) < 0)
 		return 1;
 
 	/*
@@ -1148,7 +1152,9 @@ static rlm_rcode_t mod_authorize(void *instance, REQUEST *request)
 
 	int	rows;
 
-	char	*expanded = NULL;
+	char *expanded = NULL;
+	char *sqlusername = NULL;
+
 
 	rad_assert(request->packet != NULL);
 	rad_assert(request->reply != NULL);
@@ -1165,7 +1171,7 @@ static rlm_rcode_t mod_authorize(void *instance, REQUEST *request)
 	/*
 	 *	Set, escape, and check the user attr here
 	 */
-	if (sql_set_user(inst, request, NULL) < 0) {
+	if (sql_set_user(inst, request, &sqlusername, NULL) < 0) {
 		return RLM_MODULE_FAIL;
 	}
 
@@ -1204,7 +1210,8 @@ static rlm_rcode_t mod_authorize(void *instance, REQUEST *request)
 		}
 
 		if (rows == 0) {
-			RWDEBUG2("User not found in radcheck table.");
+			REDEBUG("User not found: %s", sqlusername);
+			do_fall_through = FALL_THROUGH_NO;
 			goto skipreply;	/* Don't need to free VPs we don't have */
 		}
 
@@ -1325,7 +1332,7 @@ skipreply:
 
 		RDEBUG2("Checking profile %s", profile);
 
-		if (sql_set_user(inst, request, profile) < 0) {
+		if (sql_set_user(inst, request, NULL, profile) < 0) {
 			REDEBUG("Error setting profile");
 			rcode = RLM_MODULE_FAIL;
 			goto error;
@@ -1362,6 +1369,9 @@ skipreply:
 	 *	or the group mapping table, and there was no matching profile.
 	 */
 release:
+	if (sqlusername) {
+		free(sqlusername);
+	}
 	if (!user_found) {
 		rcode = RLM_MODULE_NOTFOUND;
 	}
@@ -1450,7 +1460,7 @@ static int acct_redundant(rlm_sql_t *inst, REQUEST *request, sql_acct_section_t 
 		goto finish;
 	}
 
-	sql_set_user(inst, request, NULL);
+	sql_set_user(inst, request, NULL, NULL);
 
 	while (true) {
 		value = cf_pair_value(pair);
@@ -1609,7 +1619,7 @@ static rlm_rcode_t mod_checksimul(void *instance, REQUEST * request)
 		return RLM_MODULE_INVALID;
 	}
 
-	if (sql_set_user(inst, request, NULL) < 0) {
+	if (sql_set_user(inst, request, NULL, NULL) < 0) {
 		return RLM_MODULE_FAIL;
 	}
 
@@ -1802,6 +1812,25 @@ static rlm_rcode_t mod_post_auth(void *instance, REQUEST *request)
 	}
 
 	return RLM_MODULE_NOOP;
+}
+
+static void reply_vlan_id(REQUEST * request, const char *vlan_id) {
+	VALUE_PAIR *vp = NULL;
+	unsigned char val = 0;
+	
+	vp = fr_pair_afrom_num(request->reply, PW_TUNNEL_TYPE, 0);
+	val = 13; // VLAN
+	fr_pair_value_memcpy(vp, &val, 1);
+	fr_pair_add(&request->reply->vps, vp);
+
+	vp = fr_pair_afrom_num(request->reply, PW_TUNNEL_MEDIUM_TYPE, 0);
+	val = 6; // IEEE-802
+	fr_pair_value_memcpy(vp, &val, 1);
+	fr_pair_add(&request->reply->vps, vp);
+
+	vp = fr_pair_afrom_num(request->reply, PW_TUNNEL_PRIVATE_GROUP_ID, 0);
+	fr_pair_value_strcpy(vp, vlan_id);
+	fr_pair_add(&request->reply->vps, vp);
 }
 
 /*

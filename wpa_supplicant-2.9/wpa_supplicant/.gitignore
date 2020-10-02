@@ -1,1 +1,6 @@
 *.service
+eapol_test
+tags
+wpa_cli
+wpa_passphrase
+wpa_supplicant
