@@ -808,17 +808,13 @@ void radlog_request(log_type_t type, log_lvl_t lvl, REQUEST *request, char const
 void radlog_request_error(log_type_t type, log_lvl_t lvl, REQUEST *request, char const *msg, ...)
 {
 	va_list ap;
-#ifdef FAILURE_MESSAGE_ONLY_ONE
-	bool failmsg = false;
-	failmsg = fr_pair_find_by_num(request->packet->vps, PW_MODULE_FAILURE_MESSAGE, 0, TAG_ANY) ? true : false;
-#endif
+
 	va_start(ap, msg);
 	if (request->log.func) request->log.func(type, lvl, request, msg, ap);
-	else if (!(type & L_DBG)) vradlog_request(type, lvl, request, msg, ap);	
-#ifdef FAILURE_MESSAGE_ONLY_ONE
-	if (!failmsg)
+	else if (!(type & L_DBG)) vradlog_request(type, lvl, request, msg, ap);
+#if 0
+	vmodule_failure_msg(request, msg, ap);
 #endif
-		vmodule_failure_msg(request, msg, ap);
 	va_end(ap);
 }
 

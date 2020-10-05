@@ -369,7 +369,9 @@ post-auth {
 	#
 	Post-Auth-Type REJECT {
 		# log failed authentications in SQL, too.
-		-sql
+		if (&request:Module-Failure-Message) {
+			-sql
+		}
 		attr_filter.access_reject
 
 		#

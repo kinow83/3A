@@ -1046,8 +1046,9 @@ calculate_result:
 	/*
 	 *	The child's action says return.  Do so.
 	 */
+	// printf(">>>>>>>>>>>> KAKA: actions = %d, priority = %d\n", c->actions[result], priority);
 	if ((c->actions[result] == MOD_ACTION_RETURN) &&
-	    (priority <= 0)) {
+	    (priority <= 0)) {		
 		entry->result = result;
 		goto finish;
 	}

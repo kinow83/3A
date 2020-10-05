@@ -364,7 +364,7 @@ authorize {
 	#
 	# Look for realms in user@domain format
 	suffix
-#	ntdomain
+	ntdomain
 
 	#
 	#  This module takes care of EAP-MD5, EAP-TLS, and EAP-LEAP
@@ -386,9 +386,11 @@ authorize {
 	#  uncomment it as well; this will further reduce the number of
 	#  LDAP and/or SQL queries for TTLS or PEAP.
 	#
+	# KAKA: reference defaultactions action in modcall.c 
+	# If result is RLM_MODULE_OK, then return modcall()
 	eap {
 		ok = return
-#		updated = return
+		updated = return
 	}
 
 	#
@@ -853,7 +855,9 @@ post-auth {
 	#
 	Post-Auth-Type REJECT {
 		# log failed authentications in SQL, too.
-		-sql
+		if (&request:Module-Failure-Message) {
+			-sql
+		}
 		attr_filter.access_reject
 
 		# Insert EAP-Failure message if the request was

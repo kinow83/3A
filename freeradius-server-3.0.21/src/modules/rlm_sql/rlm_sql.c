@@ -1211,6 +1211,8 @@ static rlm_rcode_t mod_authorize(void *instance, REQUEST *request)
 
 		if (rows == 0) {
 			REDEBUG("User not found: %s", sqlusername);
+			// KAKA: insert radpostauth
+			module_failure_msg(request, "User not found: %s", sqlusername);
 			do_fall_through = FALL_THROUGH_NO;
 			goto skipreply;	/* Don't need to free VPs we don't have */
 		}
