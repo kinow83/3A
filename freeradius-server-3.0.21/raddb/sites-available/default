@@ -289,7 +289,7 @@ authorize {
 	#
 	#  See policy.d/filter for the definition of the filter_username policy.
 	#
-	filter_username
+#	filter_username
 
 	#
 	#  Some broken equipment sends passwords with embedded zeros.
@@ -409,7 +409,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in mods-available/sql
-	-sql
+	sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing
