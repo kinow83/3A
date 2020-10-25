@@ -1,5 +1,5 @@
 3A (The FreeRADIUS server)
----------------------
+===================
 
 Introduction
 ------------
