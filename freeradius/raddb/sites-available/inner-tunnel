@@ -53,7 +53,7 @@ authorize {
 	#
 	#  See policy.d/filter for the definition of the filter_username policy.
 	#
-	filter_username
+#	filter_username
 
 	#
 	#  Do checks on outer / inner User-Name, so that users
@@ -102,7 +102,7 @@ authorize {
 	#  it difficult to bill people for their network activity.
 	#
 	suffix
-#	ntdomain
+	ntdomain
 
 	#
 	#  The "suffix" module takes care of stripping the domain
@@ -141,7 +141,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in `mods-config/sql/main/$driver/queries.conf`
-	-sql
+	sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing
@@ -369,7 +369,9 @@ post-auth {
 	#
 	Post-Auth-Type REJECT {
 		# log failed authentications in SQL, too.
-		-sql
+		if (&request:Module-Failure-Message) {
+			-sql
+		}
 		attr_filter.access_reject
 
 		#

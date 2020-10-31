@@ -289,7 +289,7 @@ authorize {
 	#
 	#  See policy.d/filter for the definition of the filter_username policy.
 	#
-	filter_username
+#	filter_username
 
 	#
 	#  Some broken equipment sends passwords with embedded zeros.
@@ -364,7 +364,7 @@ authorize {
 	#
 	# Look for realms in user@domain format
 	suffix
-#	ntdomain
+	ntdomain
 
 	#
 	#  This module takes care of EAP-MD5, EAP-TLS, and EAP-LEAP
@@ -386,9 +386,11 @@ authorize {
 	#  uncomment it as well; this will further reduce the number of
 	#  LDAP and/or SQL queries for TTLS or PEAP.
 	#
+	# kinow83: reference default action in modcall.c 
+	# If result is RLM_MODULE_OK, then return modcall()
 	eap {
 		ok = return
-#		updated = return
+		updated = return
 	}
 
 	#
@@ -409,7 +411,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in mods-available/sql
-	-sql
+	sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing
@@ -644,7 +646,7 @@ accounting {
 	#  Log traffic to an SQL database.
 	#
 	#  See "Accounting queries" in mods-available/sql
-	-sql
+	sql
 
 	#
 	#  If you receive stop packets with zero session length,
@@ -754,7 +756,7 @@ post-auth {
 	#  After authenticating the user, do another SQL query.
 	#
 	#  See "Authentication Logging Queries" in mods-available/sql
-	-sql
+	sql
 
 	#
 	#  Un-comment the following if you want to modify the user's object
@@ -853,7 +855,9 @@ post-auth {
 	#
 	Post-Auth-Type REJECT {
 		# log failed authentications in SQL, too.
-		-sql
+		if (&request:Module-Failure-Message) {
+			sql
+		}
 		attr_filter.access_reject
 
 		# Insert EAP-Failure message if the request was
