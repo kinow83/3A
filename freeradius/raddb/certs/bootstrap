@@ -57,6 +57,10 @@ if [ ! -f serial ]; then
   echo '01' > serial
 fi
 
+if [ ! -f server.pass ]; then
+	grep output_password server.cnf | sed 's/.*=//;s/^ *//' > server.pass
+fi
+
 if [ ! -f server.crt ]; then
   openssl ca -batch -keyfile ca.key -cert ca.pem -in server.csr  -key `grep output_password ca.cnf | sed 's/.*=//;s/^ *//'` -out server.crt -extensions xpserver_ext -extfile xpextensions -config ./server.cnf || exit 1
 fi
@@ -70,6 +74,10 @@ if [ ! -f server.pem ]; then
   openssl pkcs12 -in server.p12 -out server.pem -passin pass:`grep output_password server.cnf | sed 's/.*=//;s/^ *//'` -passout pass:`grep output_password server.cnf | sed 's/.*=//;s/^ *//'` || exit 1
   openssl verify -CAfile ca.pem server.pem || exit 1
   chmod g+r server.pem
+fi
+
+if [ ! -f ca.pass ]; then
+	grep output_password ca.cnf | sed 's/.*=//;s/^ *//' > ca.pass
 fi
 
 if [ ! -f ca.der ]; then
