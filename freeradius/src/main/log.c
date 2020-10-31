@@ -812,7 +812,9 @@ void radlog_request_error(log_type_t type, log_lvl_t lvl, REQUEST *request, char
 	va_start(ap, msg);
 	if (request->log.func) request->log.func(type, lvl, request, msg, ap);
 	else if (!(type & L_DBG)) vradlog_request(type, lvl, request, msg, ap);
+#if 0
 	vmodule_failure_msg(request, msg, ap);
+#endif
 	va_end(ap);
 }
 
