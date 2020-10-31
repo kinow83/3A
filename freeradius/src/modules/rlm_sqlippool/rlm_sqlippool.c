@@ -562,7 +562,7 @@ static rlm_rcode_t CC_HINT(nonnull) mod_post_auth(void *instance, REQUEST *reque
 		return RLM_MODULE_FAIL;
 	}
 
-	if (inst->sql_inst->sql_set_user(inst->sql_inst, request, NULL) < 0) {
+	if (inst->sql_inst->sql_set_user(inst->sql_inst, request, NULL, NULL) < 0) {
 		return RLM_MODULE_FAIL;
 	}
 
@@ -770,7 +770,7 @@ static rlm_rcode_t CC_HINT(nonnull) mod_accounting(void *instance, REQUEST *requ
 		return RLM_MODULE_FAIL;
 	}
 
-	if (inst->sql_inst->sql_set_user(inst->sql_inst, request, NULL) < 0) return RLM_MODULE_FAIL;
+	if (inst->sql_inst->sql_set_user(inst->sql_inst, request, NULL, NULL) < 0) return RLM_MODULE_FAIL;
 
 	switch (acct_status_type) {
 	case PW_STATUS_START:
