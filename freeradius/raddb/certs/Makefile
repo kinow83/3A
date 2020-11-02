@@ -66,7 +66,10 @@ dh:
 #  Create a new self-signed CA certificate
 #
 ######################################################################
-ca.key ca.pem: ca.cnf
+ca.pass:
+	grep output_password ca.cnf | sed 's/.*=//;s/^ *//' > ca.pass
+	
+ca.key ca.pem: ca.cnf ca.pass
 	@[ -f index.txt ] || $(MAKE) index.txt
 	@[ -f serial ] || $(MAKE) serial
 	$(OPENSSL) req -new -x509 -keyout ca.key -out ca.pem \
@@ -91,7 +94,10 @@ server.csr server.key: server.cnf
 	$(OPENSSL) req -new  -out server.csr -keyout server.key -config ./server.cnf
 	chmod g+r server.key
 
-server.crt: server.csr ca.key ca.pem
+server.pass:
+	grep output_password server.cnf | sed 's/.*=//;s/^ *//' > server.pass
+
+server.crt: server.csr ca.key ca.pem server.pass
 	$(OPENSSL) ca -batch -keyfile ca.key -cert ca.pem -in server.csr  -key $(PASSWORD_CA) -out server.crt -extensions xpserver_ext -extfile xpextensions -config ./server.cnf
 
 server.p12: server.crt
