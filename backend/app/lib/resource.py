@@ -1,11 +1,11 @@
 from flask import request
 from flask_restful import Resource
 from functools import wraps
-
+from app.lib.ret import OK, FAIL
 
 class DaoResource():
     '''
-    ApiResource
+    DAO
     '''
     def __init__(self, pdict):
         self.p = pdict
@@ -19,23 +19,30 @@ class DaoResource():
                 return False, v
         return True, ''
 
+    def fail_required(self, cause):
+        return FAIL("required parameter: {}".format(cause))
+
+    def fail_unknown(self, name, value):
+        return FAIL("unknown {}: {}".format(name, value))
 
 class ApiResource(Resource):
     '''
-    ApiResource
+    API
     '''
     def __init__(self):
         super().__init__()
         self.p = self.parameters()
 
-    def response(self, ok_cause):
-        ok = ok_cause[0]
-        cause = ok_cause[1]
+    def response(self, ok_res):
+        ok = ok_res[0]
+        res = ok_res[1]
         if ok:
-            return {'result': cause}, 200
+            return {'result': res}, 200
         else:
-            return {'result': cause}, 400
+            return {'result': res}, 400
 
+    '''
+    @deprecared
     def requires_ok(self, vars):
         vs = vars
         if type(vars) != list:
@@ -44,6 +51,7 @@ class ApiResource(Resource):
             if not self.p.get(v):
                 return False, v
         return True, ''
+    '''
 
     def parameters(self):
         parameter = request.args.to_dict() or {}

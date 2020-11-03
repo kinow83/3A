@@ -1,5 +1,6 @@
 import pymysql
 from functools import wraps
+from app.lib.ret import OK, FAIL
 
 class MariaDB():
     def __init__(self):
@@ -7,7 +8,7 @@ class MariaDB():
             'host': "localhost",
             'port': 3306,
             'user': "radius",
-            'passwd': "qwe123",
+            'passwd': "radpass",
             'db': "radius",
             'autocommit': True,
             'charset': "utf8",
@@ -84,54 +85,54 @@ class DB():
     def insert(db, cmd):
         try:
             db.execute(cmd)
-            return True, {}
+            return OK()
         except Exception as e:
-            return False, e
+            return FAIL(e)
 
     @staticmethod
     @dbio
     def update(db, cmd):
         try:
             db.execute(cmd)
-            return True, {}
+            return OK()
         except Exception as e:
-            return False, e
+            return FAIL(e)
 
     @staticmethod
     @dbio
     def delete(db, cmd):
         try:
             db.execute(cmd)
-            return True, {}
+            return OK()
         except Exception as e:
-            return False, e
+            return FAIL(e)
 
     @staticmethod
     @dbio
     def callproc(db, procname, args=()):
         try:
-            return True, db.callproc(procname, args)
+            return OK(db.callproc(procname, args))
         except Exception as e:
-            return False, e
+            return FAIL(e)
 
     @staticmethod
     @dbio
     def select(db, cmd):
         try:
             if db.execute(cmd) > 0:
-                return True, db.fetchall()
+                return OK(db.fetchall())
             else:
-                return True, {}
+                return OK([])
         except Exception as e:
-            return False, e
+            return FAIL(e)
         
     @staticmethod
     @dbio
     def selectone(db, cmd):
         try:
             if db.execute(cmd) > 0:
-                return True, db.fetchone()
+                return OK(db.fetchone())
             else:
-                return True, {}
+                return OK({})
         except Exception as e:
-            return False, e
+            return FAIL(e)
