@@ -16,3 +16,7 @@ class UsersApi(ApiResource):
     def delete(self):
         dao = UsersDao(self.p)
         return self.response(dao.del_user())
+
+    def put(self):
+        dao = UsersDao(self.p)
+        return self.response(dao.mod_user())

@@ -1,0 +1,28 @@
+@endpoint=http://localhost/api
+
+###
+GET {{endpoint}}/hr/users HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+###
+POST {{endpoint}}/hr/users HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+{
+    "user_id": "test1",
+    "username": "테스트1",
+    "passwd": "qwe123"
+}
+
+###
+PUT {{endpoint}}/hr/users HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+{
+    "user_id": "test1",
+    "username": "테스트1-modify",
+    "passwd": "qwe123-modify"
+}

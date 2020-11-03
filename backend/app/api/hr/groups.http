@@ -1,0 +1,28 @@
+@endpoint=http://localhost/api
+
+###
+GET {{endpoint}}/hr/groups HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+###
+POST {{endpoint}}/hr/groups HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+{
+    "group_id": "g1",
+    "group_name": "그룹1",
+    "parent_group_id": "g1"
+}
+
+###
+PUT {{endpoint}}/hr/groups HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
+
+{
+    "group_id": "g1",
+    "group_name": "그룹1 수정",
+    "parent_group_id": "g1"
+}

@@ -16,3 +16,7 @@ class GroupsApi(ApiResource):
     def delete(self):
         dao = GroupsDao(self.p)
         return self.response(dao.del_group())
+
+    def put(self):
+        dao = GroupsDao(self.p)
+        return self.response(dao.mod_group())
