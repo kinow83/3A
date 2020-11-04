@@ -1,0 +1,10 @@
+TARGETNAME	:= 
+
+ifneq "$(TARGETNAME)" ""
+TARGET		:= $(TARGETNAME).a
+endif
+
+SOURCES		:= $(TARGETNAME).c
+
+SRC_CFLAGS	:= -I.
+TGT_LDLIBS	:= -ldl

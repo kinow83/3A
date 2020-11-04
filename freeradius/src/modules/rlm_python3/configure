@@ -2771,8 +2771,6 @@ test -n "$PYTHON3_CONFIG_BIN" || PYTHON3_CONFIG_BIN="not-found"
 	fi
 
 	if test "x$PYTHON3_CONFIG_BIN" = xnot-found; then
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: python3-config not found" >&5
-$as_echo "$as_me: WARNING: python3-config not found" >&2;}
 		fail="$fail python3-config"
 	else
 								old_CFLAGS="$CFLAGS"
