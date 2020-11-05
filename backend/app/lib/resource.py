@@ -27,6 +27,9 @@ class DaoResource():
     def fail_unknown(self, name, value):
         return FAIL("unknown {}: {}".format(name, value))
 
+    def fail_message(self, msg):
+        return FAIL("FAIL: {}".format(msg))
+
 class ApiResource(Resource):
     '''
     API

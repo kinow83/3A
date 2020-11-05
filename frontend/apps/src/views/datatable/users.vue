@@ -27,6 +27,7 @@
                     </Column>
                     <Column field="user_id" header="UserID"></Column>
                     <Column field="username" header="Username"></Column>
+                    <Column field="group_name" header="GroupName"></Column>
                     <Column field="level" header="Lv"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="email" header="E-mail"></Column>
@@ -76,41 +77,50 @@
                 </DataTable>
             </div>
 		</div>
-        <Dialog header="Header" v-model:visible="displayPosition" :style="{width: '50vw'}" :position="position" :modal="true">
-            <div class="p-fluid">
-                <div class="p-col-12 p-md-4">
+        <Dialog header="Add User" v-model:visible="displayPosition" :style="{width: '25vw'}" :position="position" :modal="true">
+            <div class="p-grid p-flex-column">
+                <div class="p-col">
                     <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-user"></i>
                     </span>
-                        <InputText placeholder="UserID" v-model="popup_user_id" />
+                        <InputText placeholder="UserID" v-model="popup.user_id" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">
                             <i class="pi pi-user"></i>
                         </span>
-                        <InputText placeholder="Username" v-model="popup_username" />
+                        <InputText placeholder="Username" v-model="popup.username" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">P</span>
-                        <Password v-model="popup_passwd" />
+                        <Password v-model="popup.passwd" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">E</span>
-                        <InputText placeholder="E-mail" v-model="popup_email" />
+                        <InputText placeholder="E-mail" v-model="popup.email" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">P</span>
-                        <InputText placeholder="Phone" v-model="popup_phone" />
+                        <InputText placeholder="Phone" v-model="popup.phone" />
                     </div>
+                </div>
+                <div class="p-col">
+                    <div class="p-inputgroup">
+                        <h6 class="p-mr-2">Group : </h6>
+                        <div class="p-text-left"><h6>{{popup.group_name}} ({{popup.group_id}})</h6></div>
+                    </div>                    
+                </div>
+                <div class="p-col">
+                    <Tree :value="popup.groups" :filter="true" filterMode="strict" selectionMode="single"  @node-select="onPopupGroupNodeSelect"></Tree>
                 </div>
             </div>
             <template #footer>
@@ -134,11 +144,16 @@ export default {
             displayPosition: false,
             position: 'center',
 
-            popup_user_id: null,
-            popup_username: null,
-            popup_passwd: null,
-            popup_email: null,
-            popup_phone: null,
+            popup: {
+                user_id: null,
+                username: null,
+                passwd: null,
+                email: null,
+                phone: null,
+                group_id: null,
+                group_name: null,
+                groups: null,
+            },
 
             expandedRows: []
 
@@ -166,22 +181,25 @@ export default {
         },
         click_add_user() {
             this.AAAService.setUsers({
-                user_id: this.popup_user_id,
-                username: this.popup_username,
-                passwd: this.popup_passwd,
-                email: this.popup_email,
-                phone: this.popup_phone
+                user_id: this.popup.user_id,
+                username: this.popup.username,
+                passwd: this.popup.passwd,
+                email: this.popup.email,
+                phone: this.popup.phone,
+                group_id: this.popup.group_id,
+                group_name: this.popup.group_name
             })
             .then(response => {
                 this.closePosition()
                 this.getUsers()
-                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add user '+this.popup_user_id, life: 3000});                
+                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add user '+this.popup.user_id, life: 3000});                
             })
             .catch(error => {
                 this.$toast.add({severity:'error', summary: 'Error Message', detail: error.response.data.result, life: 3000});
             });
         },
-        openPosition(position) {
+        openPosition(position) {            
+            this.AAAService.getGroupsTree().then(data => this.popup.groups = data);
             this.position = position;
             this.displayPosition = true;
         },
@@ -207,7 +225,11 @@ export default {
         },
         onRowCollapse(event) {
             this.$toast.add({severity: 'success', summary: 'User Collapsed', detail: event.data.username, life: 3000});
-        }
+        },        
+        onPopupGroupNodeSelect(node) {
+            this.popup.group_id = node.group_id;
+            this.popup.group_name = node.group_name;
+        },
     }
 }
 </script>

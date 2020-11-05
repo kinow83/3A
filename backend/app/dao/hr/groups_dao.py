@@ -12,7 +12,7 @@ class GroupsDao(DaoResource):
             if group_id:
                 where_sql += "AND A.group_id = '{}'".format(group_id)
             sql = """
-                SELECT * FROM user_groups A, groups B
+                SELECT * FROM users_groups A, groups B
                 WHERE A.group_id = B.group_id AND A.user_id = '{user_id}' {where_sql}
             """.format(user_id=user_id, where_sql=where_sql)
         else:

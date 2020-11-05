@@ -29,7 +29,7 @@
                         </div>
                         <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">MacCheck</span>
-                            <InputText v-model="selected.mac_check" />
+                            <InputSwitch v-model="selected.mac_check" />
                         </div>
                         <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">vlanID</span>
@@ -113,59 +113,44 @@
                 </DataTable>
             </div>
 		</div>        
-        <Dialog header="Header" v-model:visible="displayPosition" :style="{width: '50vw'}" :position="position" :modal="true">
-            <div class="p-fluid">
-                <div class="p-col-12 p-md-4">
-                    <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-user"></i>
-                    </span>
-                        <InputText placeholder="GroupID" v-model="popup_group_id" />
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-4">
+        <Dialog header="Add Group" v-model:visible="displayPosition" :style="{width: '25vw'}" :position="position" :modal="true">
+            <div class="p-grid p-flex-column">
+                <div class="p-col">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">
                             <i class="pi pi-user"></i>
                         </span>
-                        <InputText placeholder="GroupName" v-model="popup_group_name" />
+                        <InputText placeholder="GroupID" v-model="popup.group_id" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon">Vlan</span>
-                        <InputText placeholder="Vlan-ID" v-model="valnid" />
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                        </span>
+                        <InputText placeholder="GroupName" v-model="popup.group_name" />
                     </div>
                 </div>
-                <div class="p-col-12 p-md-4">
-                    <h5>Mac Check</h5>
-                    <div class="p-field-checkbox">
-                        <Checkbox id="mac_check" v-model="mac_check" :binary="true" />
-                        <label for="binary">{{mac_check}}</label>
-                    </div>
-                </div>
-
-                <div class="p-col-12 p-md-4">
+                <div class="p-col">
                     <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon">P</span>
-                        <Dropdown v-model="selected.group_id" :options="group_list" optionLabel="group_name" :filter="true" placeholder="Select a Group" :showClear="true">
-                            <template #value="slotProps">
-                                <div class="country-item country-item-value" v-if="slotProps.value">
-                                    <img src="../../assets/images/flag_placeholder.png" :class="'flag flag-' + slotProps.value.code.toLowerCase()" />
-                                    <div>{{slotProps.value.group_name}}</div>
-                                </div>
-                                <span v-else>
-                                    {{slotProps.placeholder}}
-                                </span>
-                            </template>
-                            <template #option="slotProps">
-                                <div class="country-item">
-                                    <img src="../../assets/images/flag_placeholder.png" :class="'flag flag-' + slotProps.option.code.toLowerCase()" />
-                                    <div>{{slotProps.option.group_name}}</div>
-                                </div>
-                            </template>
-                        </Dropdown>
+                        <span class="p-inputgroup-addon">V</span>
+                        <InputText placeholder="Vlan-ID" v-model="popup.valnid" />
                     </div>
+                </div>
+                <div class="p-col">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">M</span>
+                        <InputSwitch v-model="popup.mac_check" />
+                    </div>
+                </div>
+                <div class="p-col">
+                    <div class="p-inputgroup">
+                        <h6 class="p-mr-2">Parent Group : </h6>
+                        <div class="p-text-left"><h6>{{popup.parent_group_name}} ({{popup.parent_group_id}})</h6></div>
+                    </div>                    
+                </div>
+                <div class="p-col">
+                    <Tree :value="groups" :filter="true" filterMode="strict" selectionMode="single"  @node-select="onPopupParentGroupNodeSelect"></Tree>
                 </div>
             </div>
             <template #footer>
@@ -184,14 +169,23 @@ export default {
         return {
             groups: null,
             lazyloading: {"loading": false},
-            popup_group_id: null,
-            popup_group_name: null,
+            popup: {
+                group_id: null,
+                group_name: null,
+                mac_check: false,
+                valnid: null,
+                parent_group_id: null,
+                parent_group_name: null,
+            },
             selected: {
-                "group_id": null,
-                "group_name": null,
+                group_id: null,
+                group_name: null,
+                mac_check: false,
+                valnid: null,
+                parent_group_id: null,
+                parent_group_name: null,
             },
             group_list: [],
-            mac_check: false,
             users: null,
             displayPosition: false,
             position: 'center',
@@ -221,13 +215,16 @@ export default {
         },
         click_add_group() {
             this.AAAService.setGroups({
-                group_id: this.popup_group_id,
-                group_name: this.popup_group_name,
+                group_id: this.popup.group_id,
+                group_name: this.popup.group_name,
+                parent_group_id: this.popup.parent_group_id,
+                valnid: this.popup.valnid,
+
             })
             .then(response => {
                 this.closePosition()
                 this.getGroups()
-                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add group '+this.popup_group_id, life: 3000});                
+                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add group '+this.popup.group_id, life: 3000});                
             })
             .catch(error => {
                 this.$toast.add({severity:'error', summary: 'Error Message', detail: error.response.data.result, life: 3000});
@@ -242,6 +239,10 @@ export default {
         },
         getGroups() {
             this.AAAService.getGroupsTree().then(data => this.groups = data);
+        },
+        onPopupParentGroupNodeSelect(node) {
+            this.popup.parent_group_id = node.group_id;
+            this.popup.parent_group_name = node.group_name;
         },
         onNodeSelect(node) {
             //this.$toast.add({severity:'success', summary: 'Node Selected', detail: node.label, life: 3000});
