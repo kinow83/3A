@@ -1504,7 +1504,11 @@ static rlm_rcode_t mschap_error(rlm_mschap_t *inst, REQUEST *request, unsigned c
 		REDEBUG("MS-CHAP2-Response is incorrect");
 		error = 691;
 		retry = inst->allow_retry;
-		message = "Authentication rejected (password incorrect)";
+#if 0
+		message = "Authentication rejected";
+#else
+		message = "Password is incorrect";
+#endif
 		rcode = RLM_MODULE_REJECT;
 	}
 
