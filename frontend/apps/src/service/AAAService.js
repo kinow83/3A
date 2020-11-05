@@ -28,6 +28,7 @@ export default class AAAService {
 			}
 		);
 	}
+	// log
     getRadauthlog(data) {
 		if (data) {
 			return axios.get('http://127.0.0.1:180/api/lg/radauthlog', 
@@ -38,18 +39,34 @@ export default class AAAService {
 				.then(res => res.data.result);
 		}
 	}
+	// users
 	getUsers() {
 		return axios.get('http://127.0.0.1:180/api/hr/users')
 			.then(res => res.data.result);
 	}
+	setUsers(data) {
+		return axios.post('http://127.0.0.1:180/api/hr/users', 
+			qs.stringify(data))
+				.then(res => res.data.result);
+	}
+	delUsers(_data) {
+		return axios.delete('http://127.0.0.1:180/api/hr/users', 
+			{data: _data})
+				.then(res => res.data.result);
+	}
+	// groups
 	getGroups() {
 		return axios.get('http://127.0.0.1:180/api/hr/groups')
 			.then(res => res.data.result);
 	}
-
-	setUsers(data) {
-		return axios.post('http://127.0.0.1:180/api/hr/users', 
+	setGroups(data) {
+		return axios.post('http://127.0.0.1:180/api/hr/groups', 
 			qs.stringify(data))
+				.then(res => res.data.result);
+	}
+	delGroups(_data) {
+		return axios.delete('http://127.0.0.1:180/api/hr/groups', 
+			{data: _data})
 				.then(res => res.data.result);
 	}
 }

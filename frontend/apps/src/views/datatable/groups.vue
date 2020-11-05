@@ -2,7 +2,7 @@
 	<div>
 		<div class="content-section introduction">
 			<div class="feature-intro">
-				<h1>Users</h1>
+				<h1>Groups</h1>
 			</div>
 		</div>
 
@@ -15,7 +15,7 @@
                         <div class="table-header-container">
                             <ProgressSpinner v-show="lazyloading['loading']" style="width:30px;height:30px" strokeWidth="8"/>
                             <Button icon="pi pi-refresh" class="p-button-warning" label="Add" @click="openPosition('left')"/>
-                            <Button icon="pi pi-refresh" class="p-button-success" @click="getUsers()"/>
+                            <Button icon="pi pi-refresh" class="p-button-success" @click="getGroups()"/>
                         </div>
                     </template>
 
@@ -25,8 +25,8 @@
                         <i class="pi pi-user"></i>
                         </template>
                     </Column>
-                    <Column field="user_id" header="UserID"></Column>
-                    <Column field="username" header="Username"></Column>
+                    <Column field="group_id" header="GroupID"></Column>
+                    <Column field="group_name" header="GroupName"></Column>
                     <Column field="level" header="Lv"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="email" header="E-mail"></Column>
@@ -83,7 +83,7 @@
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-user"></i>
                     </span>
-                        <InputText placeholder="UserID" v-model="popup_user_id" />
+                        <InputText placeholder="GroupID" v-model="popup_group_id" />
                     </div>
                 </div>
                 <div class="p-col-12 p-md-4">
@@ -91,30 +91,48 @@
                         <span class="p-inputgroup-addon">
                             <i class="pi pi-user"></i>
                         </span>
-                        <InputText placeholder="Username" v-model="popup_username" />
+                        <InputText placeholder="GroupName" v-model="popup_group_name" />
                     </div>
                 </div>
+                <div class="p-col-12 p-md-4">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">Vlan</span>
+                        <InputText placeholder="Vlan-ID" v-model="valnid" />
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-4">
+                    <h5>Mac Check</h5>
+                    <div class="p-field-checkbox">
+                        <Checkbox id="mac_check" v-model="mac_check" :binary="true" />
+                        <label for="binary">{{mac_check}}</label>
+                    </div>
+                </div>
+
                 <div class="p-col-12 p-md-4">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">P</span>
-                        <Password v-model="popup_passwd" />
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-4">
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon">E</span>
-                        <InputText placeholder="E-mail" v-model="popup_email" />
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-4">
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon">P</span>
-                        <InputText placeholder="Phone" v-model="popup_phone" />
+                        <Dropdown v-model="selected_group_id" :options="group_list" optionLabel="group_name" :filter="true" placeholder="Select a Group" :showClear="true">
+                            <template #value="slotProps">
+                                <div class="country-item country-item-value" v-if="slotProps.value">
+                                    <img src="../../assets/images/flag_placeholder.png" :class="'flag flag-' + slotProps.value.code.toLowerCase()" />
+                                    <div>{{slotProps.value.group_name}}</div>
+                                </div>
+                                <span v-else>
+                                    {{slotProps.placeholder}}
+                                </span>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="country-item">
+                                    <img src="../../assets/images/flag_placeholder.png" :class="'flag flag-' + slotProps.option.code.toLowerCase()" />
+                                    <div>{{slotProps.option.group_name}}</div>
+                                </div>
+                            </template>
+                        </Dropdown>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <Button label="Yes" icon="pi pi-check" @click="click_add_user" autofocus />
+                <Button label="Yes" icon="pi pi-check" @click="click_add_group" autofocus />
                 <Button label="No" icon="pi pi-times" @click="closePosition" class="p-button-text" />
             </template>
         </Dialog>
@@ -127,6 +145,9 @@ import AAAService from '../../service/AAAService';
 export default {
     data() {
         return {
+            selected_group_id: null,
+            group_list: [],
+            mac_check: false,
             users: null,
             selected_user: null,
             lazyloading: {"loading": false},
@@ -149,7 +170,7 @@ export default {
         this.AAAService = new AAAService(this.lazyloading);
     },
     mounted() {
-        this.AAAService.getUsers().then(data => this.users = data);
+        this.AAAService.getGroups().then(data => this.users = data);
     },
     methods: {
         click_delete_user(data) {
@@ -157,14 +178,14 @@ export default {
                 user_id: data.user_id
             })
             .then(response => {
-                this.getUsers()
+                this.getGroups()
                 this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success delete user '+data.user_id, life: 3000});                
             })
             .catch(error => {
                 this.$toast.add({severity:'error', summary: 'Error Message', detail: error.response.data.result, life: 3000});
             });
         },
-        click_add_user() {
+        click_add_group() {
             this.AAAService.setUsers({
                 user_id: this.popup_user_id,
                 username: this.popup_username,
@@ -174,7 +195,7 @@ export default {
             })
             .then(response => {
                 this.closePosition()
-                this.getUsers()
+                this.getGroups()
                 this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add user '+this.popup_user_id, life: 3000});                
             })
             .catch(error => {
@@ -188,11 +209,11 @@ export default {
         closePosition() {
             this.displayPosition = false;
         },
-        getUsers() {
-            this.AAAService.getUsers().then(data => this.users = data);
+        getGroups() {
+            this.AAAService.getGroups().then(data => this.users = data);
         },
         setUsers() {
-            this.AAAService.getUsers().then(data => this.users = data);
+            this.AAAService.getGroups().then(data => this.users = data);
         },
         onRowSelect(event) {
             this.$toast.add({severity: 'info', summary: 'User Selected', detail: 'Name: ' + event.data.username, life: 3000});
