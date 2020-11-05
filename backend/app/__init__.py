@@ -20,4 +20,7 @@ def create_app():
     from app.api.hr import hr_bp
     app.register_blueprint(hr_bp, url_prefix='/api')
 
+    from app.api.lg import lg_bp
+    app.register_blueprint(lg_bp, url_prefix='/api')
+
     return app

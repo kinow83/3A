@@ -9,6 +9,7 @@ class DaoResource():
     '''
     def __init__(self, pdict):
         self.p = pdict
+        print(self.p)
 
     def required(self, vars):
         vs = vars
@@ -33,13 +34,15 @@ class ApiResource(Resource):
         super().__init__()
         self.p = self.parameters()
 
-    def response(self, ok_res):
+    def response(self, ok_res):        
         ok = ok_res[0]
         res = ok_res[1]
         if ok:
-            return {'result': res}, 200
+            http_res = {'result': res}, 200
         else:
-            return {'result': res}, 400
+            http_res = {'result': res}, 400
+        print(http_res)
+        return http_res
 
     '''
     @deprecared

@@ -9,7 +9,7 @@ class UsersApi(ApiResource):
         dao = UsersDao(self.p)
         return self.response(dao.get_users())
 
-    def post(self):
+    def post(self):        
         dao = UsersDao(self.p)
         return self.response(dao.set_user())
 
