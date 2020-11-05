@@ -1,4 +1,0 @@
-mysql
-raddb/mods-available/sql
-raddb/mods-config/sql/main/mysql/schema.sql
-raddb/mods-config/sql/main/mysql/queries.conf
