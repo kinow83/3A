@@ -879,7 +879,11 @@ void vmodule_failure_msg(REQUEST *request, char const *fmt, va_list ap)
 
 	MEM(vp = pair_make_request("Module-Failure-Message", NULL, T_OP_ADD));
 	if (request->module && (request->module[0] != '\0')) {
+#if KINOW
 		fr_pair_value_sprintf(vp, "%s: %s", request->module, p);
+#else
+		fr_pair_value_sprintf(vp, "%s", p);
+#endif
 	} else {
 		fr_pair_value_sprintf(vp, "%s", p);
 	}
