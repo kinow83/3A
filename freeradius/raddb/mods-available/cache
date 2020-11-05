@@ -28,7 +28,7 @@ cache {
 	#    rlm_cache_memcached - A non persistent "webscale" distributed datastore.
 	#                          Useful if the cached data need to be shared between
 	#                          a cluster of RADIUS servers.
-#	driver = "rlm_cache_rbtree"
+	driver = "rlm_cache_rbtree"
 
 	#
 	#  Some drivers accept specific options, to set them a

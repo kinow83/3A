@@ -1,0 +1,6 @@
+@endpoint=http://localhost/api
+
+###
+GET {{endpoint}}/lg/radauthlog HTTP/1.1
+Content-Type: application/json
+User-Agent: rest-client
