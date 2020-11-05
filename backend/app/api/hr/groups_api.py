@@ -20,3 +20,8 @@ class GroupsApi(ApiResource):
     def put(self):
         dao = GroupsDao(self.p)
         return self.response(dao.mod_group())
+
+class GroupsTreeApi(ApiResource):
+    def get(self):
+        dao = GroupsDao(self.p)
+        return self.response(dao.get_groups_tree())

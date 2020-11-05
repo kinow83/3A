@@ -8,14 +8,51 @@
 
 		<div class="content-section implementation">            
             <div class="card">
+                <h5>Groups</h5>
+                <div class="p-grid">
+                    <div class="p-col">
+                        <div class="table-header-container">
+                            <ProgressSpinner v-show="lazyloading['loading']" style="width:30px;height:30px" strokeWidth="8"/>
+                            <Button icon="pi pi-refresh" class="p-button-warning" label="Add" @click="openPosition('left')"/>
+                            <Button icon="pi pi-refresh" class="p-button-success" @click="getGroups()"/>
+                        </div>
+                        <Tree :value="groups" :filter="true" filterMode="strict" selectionMode="single"  @node-select="onNodeSelect" @node-unselect="onNodeUnselect"></Tree>
+                    </div>
+                    <div class="p-col">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">GroupID</span>
+                            <InputText v-model="selected.group_id" />
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">GroupName</span>
+                            <InputText v-model="selected.group_name" />
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">MacCheck</span>
+                            <InputText v-model="selected.mac_check" />
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">vlanID</span>
+                            <InputText v-model="selected.valn_id" />
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">Created</span>
+                            <InputText v-model="selected.created" />
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">Changed</span>
+                            <InputText v-model="selected.changed" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
                 <h5>Users</h5>  
                 <DataTable :value="users" v-model:expandedRows="expandedRows" dataKey="user_id" class="p-datatable-sm" 
                     @row-expand="onRowExpand" @row-collapse="onRowCollapse">
                     <template #header>
                         <div class="table-header-container">
                             <ProgressSpinner v-show="lazyloading['loading']" style="width:30px;height:30px" strokeWidth="8"/>
-                            <Button icon="pi pi-refresh" class="p-button-warning" label="Add" @click="openPosition('left')"/>
-                            <Button icon="pi pi-refresh" class="p-button-success" @click="getGroups()"/>
                         </div>
                     </template>
 
@@ -25,8 +62,8 @@
                         <i class="pi pi-user"></i>
                         </template>
                     </Column>
-                    <Column field="group_id" header="GroupID"></Column>
-                    <Column field="group_name" header="GroupName"></Column>
+                    <Column field="user_id" header="UserID"></Column>
+                    <Column field="username" header="Username"></Column>
                     <Column field="level" header="Lv"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="email" header="E-mail"></Column>
@@ -75,7 +112,7 @@
                     </template>
                 </DataTable>
             </div>
-		</div>
+		</div>        
         <Dialog header="Header" v-model:visible="displayPosition" :style="{width: '50vw'}" :position="position" :modal="true">
             <div class="p-fluid">
                 <div class="p-col-12 p-md-4">
@@ -111,7 +148,7 @@
                 <div class="p-col-12 p-md-4">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">P</span>
-                        <Dropdown v-model="selected_group_id" :options="group_list" optionLabel="group_name" :filter="true" placeholder="Select a Group" :showClear="true">
+                        <Dropdown v-model="selected.group_id" :options="group_list" optionLabel="group_name" :filter="true" placeholder="Select a Group" :showClear="true">
                             <template #value="slotProps">
                                 <div class="country-item country-item-value" v-if="slotProps.value">
                                     <img src="../../assets/images/flag_placeholder.png" :class="'flag flag-' + slotProps.value.code.toLowerCase()" />
@@ -145,22 +182,19 @@ import AAAService from '../../service/AAAService';
 export default {
     data() {
         return {
-            selected_group_id: null,
+            groups: null,
+            lazyloading: {"loading": false},
+            popup_group_id: null,
+            popup_group_name: null,
+            selected: {
+                "group_id": null,
+                "group_name": null,
+            },
             group_list: [],
             mac_check: false,
             users: null,
-            selected_user: null,
-            lazyloading: {"loading": false},
-
             displayPosition: false,
             position: 'center',
-
-            popup_user_id: null,
-            popup_username: null,
-            popup_passwd: null,
-            popup_email: null,
-            popup_phone: null,
-
             expandedRows: []
 
         }
@@ -170,33 +204,30 @@ export default {
         this.AAAService = new AAAService(this.lazyloading);
     },
     mounted() {
-        this.AAAService.getGroups().then(data => this.users = data);
+        this.AAAService.getGroupsTree().then(data => this.groups = data);
     },
     methods: {
-        click_delete_user(data) {
-            this.AAAService.delUsers({
-                user_id: data.user_id
+        click_delete_group(data) {
+            this.AAAService.delGroups({
+                group_id: data.group_id
             })
             .then(response => {
                 this.getGroups()
-                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success delete user '+data.user_id, life: 3000});                
+                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success delete group '+data.group_id, life: 3000});                
             })
             .catch(error => {
                 this.$toast.add({severity:'error', summary: 'Error Message', detail: error.response.data.result, life: 3000});
             });
         },
         click_add_group() {
-            this.AAAService.setUsers({
-                user_id: this.popup_user_id,
-                username: this.popup_username,
-                passwd: this.popup_passwd,
-                email: this.popup_email,
-                phone: this.popup_phone
+            this.AAAService.setGroups({
+                group_id: this.popup_group_id,
+                group_name: this.popup_group_name,
             })
             .then(response => {
                 this.closePosition()
                 this.getGroups()
-                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add user '+this.popup_user_id, life: 3000});                
+                this.$toast.add({severity:'success', summary: 'Success Message', detail:'Success add group '+this.popup_group_id, life: 3000});                
             })
             .catch(error => {
                 this.$toast.add({severity:'error', summary: 'Error Message', detail: error.response.data.result, life: 3000});
@@ -210,16 +241,31 @@ export default {
             this.displayPosition = false;
         },
         getGroups() {
-            this.AAAService.getGroups().then(data => this.users = data);
+            this.AAAService.getGroupsTree().then(data => this.groups = data);
         },
-        setUsers() {
-            this.AAAService.getGroups().then(data => this.users = data);
+        onNodeSelect(node) {
+            //this.$toast.add({severity:'success', summary: 'Node Selected', detail: node.label, life: 3000});
+            this.AAAService.getGroups({
+                "group_id": node.group_id
+            }).then(response => {
+                if (response && response.length > 0) {
+                    var data = response[0]
+                    console.log(data);
+                    this.selected.group_id = data.group_id;  
+                    this.selected.group_name = data.group_name;
+                    this.selected.mac_check = data.mac_check;
+                    this.selected.vlan_id = data.vlan_ide;
+                    this.selected.created = data.created;
+                    this.selected.changed = data.changed;
+                }
+            });
+            
+            this.AAAService.getUsers({
+                "group_id": node.group_id
+            }).then(data => this.users = data);
         },
-        onRowSelect(event) {
-            this.$toast.add({severity: 'info', summary: 'User Selected', detail: 'Name: ' + event.data.username, life: 3000});
-        },
-        onRowUnselect(event) {
-            this.$toast.add({severity: 'warn', summary: 'User Unselected', detail: 'Name: ' + event.data.username, life: 3000});
+        onNodeUnselect(node) {
+            this.$toast.add({severity:'success', summary: 'Node Unselected', detail: node.label, life: 3000});
         },
         onRowExpand(event) {
             var params = {"user_id": event.data.user_id};

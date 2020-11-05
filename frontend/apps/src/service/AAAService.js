@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const qs = require('qs');
 export default class AAAService {
-	constructor(lazyloading) {
+	constructor(lazyloading={}) {
 		this.lazyloading = lazyloading;
 		this.registerSpinner();
 	}
@@ -40,9 +40,15 @@ export default class AAAService {
 		}
 	}
 	// users
-	getUsers() {
-		return axios.get('http://127.0.0.1:180/api/hr/users')
-			.then(res => res.data.result);
+	getUsers(_data) {
+		if (_data) {
+			return axios.get('http://127.0.0.1:180/api/hr/users',
+				{params: _data})
+					.then(res => res.data.result);
+		} else {
+			return axios.get('http://127.0.0.1:180/api/hr/users')
+				.then(res => res.data.result);
+		}
 	}
 	setUsers(data) {
 		return axios.post('http://127.0.0.1:180/api/hr/users', 
@@ -55,8 +61,22 @@ export default class AAAService {
 				.then(res => res.data.result);
 	}
 	// groups
-	getGroups() {
-		return axios.get('http://127.0.0.1:180/api/hr/groups')
+	getGroups(_data) {
+		if (_data) {
+			return axios.get('http://127.0.0.1:180/api/hr/groups',
+				{params: _data})
+					.then(res => res.data.result);
+		} else {
+			return axios.get('http://127.0.0.1:180/api/hr/groups')
+				.then(res => res.data.result);
+		}	
+	}
+	getGroup() {
+		return axios.get('http://127.0.0.1:180/api/hr/group')
+			.then(res => res.data.result);
+	}
+	getGroupsTree() {
+		return axios.get('http://127.0.0.1:180/api/hr/groups_tree')
 			.then(res => res.data.result);
 	}
 	setGroups(data) {

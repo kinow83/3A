@@ -191,9 +191,6 @@ export default {
         getUsers() {
             this.AAAService.getUsers().then(data => this.users = data);
         },
-        setUsers() {
-            this.AAAService.getUsers().then(data => this.users = data);
-        },
         onRowSelect(event) {
             this.$toast.add({severity: 'info', summary: 'User Selected', detail: 'Name: ' + event.data.username, life: 3000});
         },

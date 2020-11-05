@@ -1,3 +1,4 @@
+import json
 from flask import request
 from flask_restful import Resource
 from functools import wraps
@@ -41,7 +42,11 @@ class ApiResource(Resource):
             http_res = {'result': res}, 200
         else:
             http_res = {'result': res}, 400
-        print(http_res)
+
+        try:
+            print(json.dumps(res, indent = 2))
+        except Exception as e:
+            print("response error: {}".format(e))
         return http_res
 
     '''

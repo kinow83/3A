@@ -4,13 +4,22 @@ from app.lib.ret import OK, FAIL
 
 class UsersDao(DaoResource):
     def get_users(self):
-        user_id = self.p.get("user_id")
-        if user_id:
-            sql = "SELECT * FROM users WHERE user_id = '{user_id}'".format(user_id=user_id)
-            return DB.select(sql)
+        group_id = self.p.get("group_id")
+        user_id = self.p.get("user_id")        
+        where_sql = ""
+
+        if group_id:            
+            if user_id:
+                where_sql += "AND A.user_id = '{}'".format(user_id)
+            sql = """
+                SELECT B.*, A.group_id FROM users_groups A, users B
+                WHERE A.user_id = B.user_id AND A.group_id = '{group_id}' {where_sql}
+            """.format(group_id=group_id, where_sql=where_sql)
         else:
-            sql ="SELECT * FROM users"
-            return DB.select(sql)
+            if user_id:
+                where_sql += "AND user_id = '{}'".format(user_id)
+            sql = "SELECT * FROM users WHERE 1=1 {where_sql}".format(where_sql=where_sql)                
+        return DB.select(sql)
 
     def set_user(self):
         ok, res = self.required(["user_id", "username", "passwd"])

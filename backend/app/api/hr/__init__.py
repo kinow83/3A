@@ -12,3 +12,4 @@ hr_api = Api(hr_bp, prefix='/hr')
 hr_api.add_resource(users_api.UsersApi, '/users', endpoint='users')
 # GET/POST/DELETE/PUT
 hr_api.add_resource(groups_api.GroupsApi, '/groups', endpoint='groups')
+hr_api.add_resource(groups_api.GroupsTreeApi, '/groups_tree', endpoint='groups_tree')
