@@ -127,7 +127,7 @@ DROP TABLE IF EXISTS `radius`.`radpostauth` ;
 
 CREATE TABLE IF NOT EXISTS `radius`.`radpostauth` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(64) NULL,
+  `user_id` VARCHAR(64) NULL,
   `reply` VARCHAR(32) NULL,
   `result` TINYINT NULL,
   `reason` VARCHAR(200) NULL,
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `radius`.`radacct` (
   `radacctid` INT NOT NULL AUTO_INCREMENT,
   `acctsessionid` VARCHAR(64) NOT NULL DEFAULT '',
   `acctuniqueid` VARCHAR(32) NULL DEFAULT '',
-  `username` VARCHAR(64) NULL DEFAULT '',
+  `user_id` VARCHAR(64) NULL DEFAULT '',
   `realm` VARCHAR(64) NULL DEFAULT '',
   `nasipaddress` VARCHAR(15) NULL DEFAULT '',
   `nasportid` VARCHAR(32) NULL,
