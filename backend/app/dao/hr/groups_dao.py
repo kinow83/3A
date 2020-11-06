@@ -33,11 +33,13 @@ class GroupsDao(DaoResource):
         """.format(where_sql=where_sql)
         ok, res = DB.select(sql)
         if not ok:
-            return self.fail_required(res)
+            return self.fail_message(res)
 
         root = list(filter(lambda g: g["group_id"] == g["parent_group_id"], res))
+        print(root)
         res  = list(filter(lambda g: g["group_id"] != g["parent_group_id"], res))
         tree = root[0]
+
 
         self.get_groups_subtree(res, tree)        
         self.debug_groups_tree(tree)
@@ -65,13 +67,15 @@ class GroupsDao(DaoResource):
                 self.get_groups_subtree(groups, g)
 
     def set_group(self):
-        ok, res = self.required(["group_id", "group_name", "parent_group_id"])
+        ok, res = self.required(["group_id", "group_name"])
         if not ok:
             return self.fail_required(res)
 
         group_id = self.p.get("group_id")
         group_name = self.p.get("group_name")
         parent_group_id = self.p.get("parent_group_id")
+        if not parent_group_id:
+            parent_group_id = group_id
         sql = """
             INSERT INTO groups (group_id, group_name, parent_group_id) VALUES
             ('{group_id}', '{group_name}', '{parent_group_id}')
