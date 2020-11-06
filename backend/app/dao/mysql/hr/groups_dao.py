@@ -3,9 +3,11 @@ from app.lib.resource import DaoResource
 from app.lib.ret import OK, FAIL
 
 class GroupsDao(DaoResource):
-    def get_groups(self):
-        group_id = self.p.get("group_id")
-        user_id = self.p.get("user_id")
+    def get_groups(self, vp=None):
+        vp = vp if vp else self.p
+
+        group_id = vp.get("group_id")
+        user_id = vp.get("user_id")
         where_sql = ""
 
         if user_id:
@@ -21,8 +23,10 @@ class GroupsDao(DaoResource):
             sql = "SELECT * FROM groups WHERE 1=1 {where_sql}".format(where_sql=where_sql)
         return DB.select(sql)
 
-    def get_groups_tree(self):
-        group_id = self.p.get("group_id")
+    def get_groups_tree(self, vp=None):
+        vp = vp if vp else self.p
+
+        group_id = vp.get("group_id")
         where_sql = ""
 
         if group_id:
@@ -36,10 +40,9 @@ class GroupsDao(DaoResource):
             return self.fail_message(res)
 
         root = list(filter(lambda g: g["group_id"] == g["parent_group_id"], res))
-        print(root)
+        #print(root)
         res  = list(filter(lambda g: g["group_id"] != g["parent_group_id"], res))
         tree = root[0]
-
 
         self.get_groups_subtree(res, tree)        
         self.debug_groups_tree(tree)
@@ -66,14 +69,16 @@ class GroupsDao(DaoResource):
                     tree["children"] = [g]
                 self.get_groups_subtree(groups, g)
 
-    def set_group(self):
+    def set_group(self, vp=None):
+        vp = vp if vp else self.p
+
         ok, res = self.required(["group_id", "group_name"])
         if not ok:
             return self.fail_required(res)
 
-        group_id = self.p.get("group_id")
-        group_name = self.p.get("group_name")
-        parent_group_id = self.p.get("parent_group_id")
+        group_id = vp.get("group_id")
+        group_name = vp.get("group_name")
+        parent_group_id = vp.get("parent_group_id")
         if not parent_group_id:
             parent_group_id = group_id
         sql = """
@@ -82,12 +87,14 @@ class GroupsDao(DaoResource):
         """.format(group_id=group_id, group_name=group_name, parent_group_id=parent_group_id)
         return DB.insert(sql)
 
-    def del_group(self):
+    def del_group(self, vp=None):
+        vp = vp if vp else self.p
+
         ok, res = self.required(["group_id"])
         if not ok:
             return self.fail_required(res)
 
-        group_id = self.p.get("group_id")
+        group_id = vp.get("group_id")
         ok, res = self.get_groups()
         if not ok:
             return FAIL(res)
@@ -97,21 +104,23 @@ class GroupsDao(DaoResource):
         sql = "DELETE FROM groups WHERE group_id = '{group_id}'".format(group_id=group_id)
         return DB.delete(sql)
 
-    def mod_group(self):
+    def mod_group(self, vp=None):
+        vp = vp if vp else self.p
+        
         ok, res = self.required(["group_id", "group_name", "parent_group_id"])
         if not ok:
             return self.fail_required(res)
 
-        group_id = self.p.get("group_id")
+        group_id = vp.get("group_id")
         ok, res = self.get_groups()
         if not ok:
             return FAIL(res)
         if not len(res):
             return self.fail_unknown("group_id", group_id)
 
-        group_id = self.p.get("group_id")
-        group_name = self.p.get("group_name")
-        parent_group_id = self.p.get("parent_group_id")
+        group_id = vp.get("group_id")
+        group_name = vp.get("group_name")
+        parent_group_id = vp.get("parent_group_id")
         sql = """
             UPDATE groups SET group_name='{group_name}', parent_group_id='{parent_group_id}'
             WHERE group_id='{group_id}'

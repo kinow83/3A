@@ -55,7 +55,7 @@ class MariaDB():
 
     def execute(self, cmd):
         cmd = cmd.strip()
-        print(cmd)
+        print("[DB] sql: {}".format(cmd))
         return self.cursor.execute(cmd)
 
     def callproc(self, procname, args=()):

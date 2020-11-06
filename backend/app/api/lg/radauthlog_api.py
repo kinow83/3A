@@ -1,11 +1,13 @@
 from flask import request, abort
 from flask_restful import Resource
 from app.lib.resource import ApiResource
-from app.dao.hr.users_dao import UsersDao
-from app.dao.hr.groups_dao import GroupsDao
-from app.dao.lg.radlog_dao import RadlogDao
+from app.lib.resource import ApiResource, DaoResource
 
 class RadauthlogApi(ApiResource):
+    def init(self):
+        self.dao_mapper = {
+            "default": "app.dao.mysql.lg.radlog_dao"
+        }
+
     def get(self):
-        dao = RadlogDao(self.p)
-        return self.response(dao.get_radauthlog())
+        return self.dao_response("get_radauthlog")

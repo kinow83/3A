@@ -1,12 +1,14 @@
 from app.lib.mariadb import DB
 from app.lib.resource import DaoResource
 from app.lib.ret import OK, FAIL
-from app.dao.hr.groups_dao import GroupsDao
+from app.dao.mysql.hr.groups_dao import GroupsDao
 
 class UsersDao(DaoResource):
-    def get_users(self):
-        group_id = self.p.get("group_id")
-        user_id = self.p.get("user_id")        
+    def get_users(self, vp=None):
+        vp = vp if vp else self.p
+
+        group_id = vp.get("group_id")
+        user_id = vp.get("user_id")        
         where_sql = ""
 
         if group_id:            
@@ -32,20 +34,22 @@ class UsersDao(DaoResource):
             """.format(where_sql=where_sql)                
         return DB.select(sql)
 
-    def set_user(self):
+    def set_user(self, vp=None):
+        vp = vp if vp else self.p
+
         ok, res = self.required(["user_id", "username", "passwd", "group_id", "group_name"])
         if not ok:
             return self.fail_required(res)
-        ok, res = GroupsDao({"group_id": self.p.get("group_id")}).get_groups()
+        ok, res = GroupsDao({"group_id": vp.get("group_id")}).get_groups()
         if not ok:
             return self.fail_message(res)
         if len(res) == 0:
-            return self.fail_message("can't find group {}".format(self.p.get("group_name")))
+            return self.fail_message("can't find group {}".format(vp.get("group_name")))
 
-        user_id = self.p.get("user_id")
-        username = self.p.get("username")
-        passwd = self.p.get("passwd")
-        group_id = self.p.get("group_id")
+        user_id = vp.get("user_id")
+        username = vp.get("username")
+        passwd = vp.get("passwd")
+        group_id = vp.get("group_id")
         sql = """
             INSERT INTO users (user_id, username, passwd, status) VALUES
             ('{user_id}', '{username}', '{passwd}', 0)
@@ -59,12 +63,14 @@ class UsersDao(DaoResource):
         """.format(user_id=user_id, group_id=group_id)
         return DB.insert(sql)
 
-    def del_user(self):
+    def del_user(self, vp=None):
+        vp = vp if vp else self.p
+
         ok, res = self.required(["user_id"])
         if not ok:
             return self.fail_required(res)
 
-        user_id = self.p.get("user_id")
+        user_id = vp.get("user_id")
         ok, res = self.get_users()
         if not ok:
             return FAIL(res)
@@ -74,21 +80,23 @@ class UsersDao(DaoResource):
         sql = "DELETE FROM users WHERE user_id = '{user_id}'".format(user_id=user_id)
         return DB.delete(sql)
 
-    def mod_user(self):
+    def mod_user(self, vp=None):
+        vp = vp if vp else self.p
+        
         ok, res = self.required(["user_id", "username", "passwd"])
         if not ok:
             return self.fail_required(res)
 
-        user_id = self.p.get("user_id")
+        user_id = vp.get("user_id")
         ok, res = self.get_users()
         if not ok:
             return FAIL(res)
         if not len(res):
             return self.fail_unknown("user_id", user_id)
 
-        user_id = self.p.get("user_id")
-        username = self.p.get("username")
-        passwd = self.p.get("passwd")
+        user_id = vp.get("user_id")
+        username = vp.get("username")
+        passwd = vp.get("passwd")
         sql = """
             UPDATE users SET username='{username}', passwd='{passwd}'
             WHERE user_id='{user_id}'

@@ -4,8 +4,10 @@ from app.lib.resource import DaoResource
 from app.lib.ret import OK, FAIL
 
 class RadlogDao(DaoResource):
-    def get_radauthlog(self):
-        user_id = self.p.get("user_id")
+    def get_radauthlog(self, vp=None):
+        vp = vp if vp else self.p
+
+        user_id = vp.get("user_id")
 
         where_sql = ""
         if user_id:

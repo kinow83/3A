@@ -1,22 +1,29 @@
 from flask import request, abort
 from flask_restful import Resource
-from app.lib.resource import ApiResource
-from app.dao.hr.users_dao import UsersDao
-from app.dao.hr.groups_dao import GroupsDao
+from app.lib.resource import ApiResource, DaoResource
 
 class UsersApi(ApiResource):
-    def get(self):
-        dao = UsersDao(self.p)
-        return self.response(dao.get_users())
+    def init(self):
+        '''
+        self.dao_mapper = {
+            "get_users": "app.dao.mysql.hr.users_dao",
+            "set_user": "app.dao.mysql.hr.users_dao",
+            "del_user": "app.dao.mysql.hr.users_dao",
+            "mod_user": "app.dao.mysql.hr.users_dao",
+        }
+        '''
+        self.dao_mapper = {
+            "default": "app.dao.mysql.hr.users_dao"
+        }
 
-    def post(self):        
-        dao = UsersDao(self.p)
-        return self.response(dao.set_user())
+    def get(self):
+        return self.dao_response("get_users")
+
+    def post(self):
+        return self.dao_response("set_user")
 
     def delete(self):
-        dao = UsersDao(self.p)
-        return self.response(dao.del_user())
+        return self.dao_response("del_user")
 
     def put(self):
-        dao = UsersDao(self.p)
-        return self.response(dao.mod_user())
+        return self.dao_response("mod_user")

@@ -1,16 +1,18 @@
 import json
+import importlib
 from flask import request
 from flask_restful import Resource
 from functools import wraps
 from app.lib.ret import OK, FAIL
+from app.lib.stringcase import camelcase
 
 class DaoResource():
     '''
     DAO
     '''
-    def __init__(self, pdict):
+    def __init__(self, pdict, dbtype="mysql"):
         self.p = pdict
-        print(self.p)
+        self.dbtype = dbtype
 
     def required(self, vars):
         vs = vars
@@ -20,6 +22,28 @@ class DaoResource():
             if not self.p.get(v):
                 return False, v
         return True, ''
+        
+    def call(self, path, method):
+        '''
+        experimentation
+        '''
+        print("[DAO] input: {}".format(self.p))
+        
+        try:
+            mod = importlib.import_module(path)
+        except Exception as e:
+            print("[ERROR] call(self, {}, {}): {}".format(path, method, e))
+        dao = path.rsplit('.')[-1] # last domain
+
+        cls = getattr(mod, camelcase(dao))
+        inst = cls(self.p)
+        find_method = getattr(cls, method)
+        if find_method:
+            return find_method(inst)
+        return None
+
+    def fail_duplicated(self, name):
+        return FAIL("duplicate: {}".format(name))
 
     def fail_required(self, cause):
         return FAIL("required parameter: {}".format(cause))
@@ -37,6 +61,28 @@ class ApiResource(Resource):
     def __init__(self):
         super().__init__()
         self.p = self.parameters()
+        self.dao = DaoResource(self.p)
+        self.dao_mapper = {}
+
+        init_method = None
+        try:
+            init_method = getattr(self, "init")
+        except Exception as e:
+            print(e)
+            pass
+        else:
+            if init_method:
+                init_method()
+
+    def dao_response(self, api):
+        path = self.dao_mapper.get(api)
+        if path:
+            print("[API] {}.{}".format(path, api))
+            return self.response(self.dao.call(path, api))
+        else:
+            defpath = self.dao_mapper.get("default")
+            print("[API] {}.{}".format(defpath, api))
+            return self.response(self.dao.call(defpath, api))
 
     def response(self, ok_res):        
         ok = ok_res[0]
