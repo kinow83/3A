@@ -7,6 +7,6 @@ class UsersDao(DAO):
         print(self.p)
         print(self.m)
 
-        raise ApiException(*ERR.ERROR_DAO, {"dao": "UsersDao", "api": "get_users"})
+        raise ApiException(ERR.ERROR_DAO, {"dao": "UsersDao", "api": "get_users"})
 
         return {"TEST": "OK"}

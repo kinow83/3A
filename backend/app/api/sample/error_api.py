@@ -12,7 +12,7 @@ class APIError(API):
         pass
 
     def get(self):        
-        raise ApiException(*ERR.ERROR_SAMPLE, {"msg": "This is APIError test"})
+        raise ApiException(ERR.ERROR_SAMPLE, {"msg": "This is APIError test"})
         return self.dao_call("")
 
 class DAOError(API):

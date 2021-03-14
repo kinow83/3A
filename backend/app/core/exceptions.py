@@ -8,12 +8,17 @@ from flask_babel import gettext
 logger = logging.getLogger(__name__)
 
 
+class CM:
+    def __init__(self, code, message):
+        self.code = str(code)
+        self.message  = message
+
 class ApiException(Exception):
-    def __init__(self, code, message, cause=None):
+    def __init__(self, cm, cause=None):
         super().__init__()
 
-        self.code = str(code)
-        self.message = message
+        self.code = cm.code
+        self.message = cm.message
         self.cause = cause
 
     def set_message(self, msg):
