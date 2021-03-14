@@ -1,0 +1,1 @@
+GUI_HOME="/root/git/3A/frontend"

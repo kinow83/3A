@@ -1,0 +1,2 @@
+gettext("Error API: {api}")
+gettext("Error DAO: {dao}:{api}")
