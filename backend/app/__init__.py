@@ -1,30 +1,10 @@
-
+import flask_babel as babel
 from flask import Flask, Blueprint, request, g
-from flask_babel import Babel
 from flask._compat import text_type
 from flask.json import JSONEncoder as BaseEncoder
 from speaklater import _LazyString
-
-
-class BabelExt(Babel):
-    def __init__(self, app=None, default_locale='en', default_timezone='UTC',
-                 date_formats=None, configure_jinja=True):
-        Babel.__init__(self, app, default_locale, default_timezone, date_formats, configure_jinja)
-        self.locale_selector_func = None
-        self.timezone_selector_func = None
-
-babel = BabelExt()
-
-
-@babel.localeselector
-def get_locale():
-    if 'accept_languages' in dir(request) \
-            and str(request.accept_languages) in ['en', 'ko', 'ja']:
-        # Accept-Language 헤더값으로 오버라이드 되었는지 확인
-        return str(request.accept_languages)
-
-    lang = getattr(g, 'lang', 'ko')
-    return lang
+from babel.support import NullTranslations
+from flask_babel import gettext, ngettext, lazy_gettext, get_translations
 
 
 class JSONEncoder(BaseEncoder):
@@ -35,10 +15,38 @@ class JSONEncoder(BaseEncoder):
         return BaseEncoder.default(self, o)
         
 
+
 def create_app():
+    b = babel.Babel()
+    @b.localeselector
+    def get_locale():
+        lang = getattr(g, 'lang', 'ko')
+        if lang:
+            return lang
+        return  request.accept_languages.best_match(['en', 'ko', 'en'])
+
     app = Flask(__name__)
+    b.init_app(app)
+
+    with app.app_context():
+        assert isinstance(get_translations(), NullTranslations)
+    
+    app.config.update({
+        'BABEL_TRANSLATION_DIRECTORIES': 'translations',
+        'BABEL_DEFAULT_LOCALE': 'ko'
+    })
+    
+    print(app.config['BABEL_DEFAULT_LOCALE'])
+    print(app.config['BABEL_DEFAULT_TIMEZONE'])
+    print(app.config['BABEL_TRANSLATION_DIRECTORIES'])
+
+    lazy_string = gettext('Error Sample')
+    print(lazy_string)
+
     app.json_encoder = JSONEncoder
 
+    from app.api.sample import sample_bp
+    app.register_blueprint(sample_bp, url_prefix='')
     from app.api import base_bp
     app.register_blueprint(base_bp, url_prefix='')
     from app.api.hr import hr_bp

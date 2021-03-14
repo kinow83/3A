@@ -1,9 +1,9 @@
 from app.api import base_bp
 from app.core.exceptions import ApiException
+from app.core.error import ERR
 
 @base_bp.route('/')
 def index():
-    raise ApiException(1000, "...................")
     return "aaaaaaaaaaaaaa"
 
 

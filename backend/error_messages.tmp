@@ -1,2 +1,4 @@
+gettext("Error Sample: {msg}")
+gettext("Error Sample")
 gettext("Error API: {api}")
 gettext("Error DAO: {dao}:{api}")

@@ -2,7 +2,8 @@ import logging
 
 from flask import request, jsonify
 from functools import wraps
-from app.core.translations import gettext
+#from app.core.translations import gettext
+from flask_babel import gettext
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ def api_error_check(f):
         try:
             return f(self, *args, **kwargs)
         except ApiException as e:
+            print(e.message)
             t_message = gettext(e.message, **e.cause)
 
             response = jsonify(e.to_dict())

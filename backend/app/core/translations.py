@@ -43,7 +43,7 @@ def get_translations():
     locales = [app.get_locale()]
     languages = [str(locale) for locale in locales]
 
-    # See if translations exists in Application dir
+    # See if translations exists in Application dir    
     app_dir = os.path.join(current_app.root_path, 'translations')
     filename = python_gettext.find(domain, app_dir, languages)
     if filename:
