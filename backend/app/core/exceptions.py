@@ -2,7 +2,7 @@ import logging
 
 from flask import request, jsonify
 from functools import wraps
-#from app.core.translations import gettext
+from flask_babel import gettext, ngettext, lazy_gettext
 from flask_babel import gettext
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,8 @@ class ApiException(Exception):
         self.message = message
         self.cause = cause
 
+    def set_message(self, msg):
+        self.message = msg
 
     def to_dict(self):
         res = {}
@@ -23,10 +25,8 @@ class ApiException(Exception):
         res["message"] = self.message
         return res
 
-
     def __str__(self):
         return '{}({})'.format(self.message, self.code)
-
 
     def __repr__(self):
         return '<{} {}: {}>'.format(self.__class__.__name__, self.code, self.message)
@@ -37,10 +37,9 @@ def api_error_check(f):
     def wrapper(self, *args, **kwargs):
         try:
             return f(self, *args, **kwargs)
-        except ApiException as e:
-            print(e.message)
-            t_message = gettext(e.message, **e.cause)
-
+        except ApiException as e:       
+            lazy_message = lazy_gettext(e.message, **e.cause)            
+            e.set_message(str(lazy_message))
             response = jsonify(e.to_dict())
             response.status_code = 400
             return response

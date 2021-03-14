@@ -1,4 +1,4 @@
-gettext("Error Sample: {msg}")
-gettext("Error Sample")
-gettext("Error API: {api}")
-gettext("Error DAO: {dao}:{api}")
+gettext("Error Sample: %(msg)s")
+gettext("Error kaka")
+gettext("Error API: %(api)s")
+gettext("Error DAO: %(dao)s:%(api)s")

@@ -11,13 +11,13 @@ class UsersApi(API):
         }
 
     def get(self):
-        return self.call("get_users")
+        return self.dao_call("get_users")
 
     def post(self):
-        return self.call("set_user")
+        return self.dao_call("set_user")
 
     def delete(self):
-        return self.call("del_user")
+        return self.dao_call("del_user")
 
     def put(self):
-        return self.call("mod_user")
+        return self.dao_call("mod_user")

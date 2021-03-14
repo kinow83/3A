@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-14 18:22+0000\n"
+"POT-Creation-Date: 2021-03-14 18:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,7 @@ msgstr ""
 "Generated-By: Babel 2.8.1\n"
 
 #: error_messages.tmp:1
-#, python-format
-msgid "Error Sample: %(msg)s"
+msgid "Error Sample: {msg}"
 msgstr ""
 
 #: error_messages.tmp:2
@@ -27,16 +26,10 @@ msgid "Error kaka"
 msgstr ""
 
 #: error_messages.tmp:3
-#, python-format
-msgid "Error API: %(api)s"
+msgid "Error API: {api}"
 msgstr ""
 
 #: error_messages.tmp:4
-#, python-format
-msgid "Error DAO: %(dao)s:%(api)s"
-msgstr ""
-
-#: app/__init__.py:39
-msgid "Error Sample: {msg}"
+msgid "Error DAO: {dao}:{api}"
 msgstr ""
 

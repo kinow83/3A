@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-14 17:01+0000\n"
+"POT-Creation-Date: 2021-03-14 18:22+0000\n"
 "PO-Revision-Date: 2021-03-14 15:56+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -19,18 +19,34 @@ msgstr ""
 "Generated-By: Babel 2.8.1\n"
 
 #: error_messages.tmp:1
+#, python-format
+msgid "Error Sample: %(msg)s"
+msgstr "가가가가가 %(msg)s 오옹"
+
+#: error_messages.tmp:2
+msgid "Error kaka"
+msgstr "KKKKKKKKKKKKKK"
+
+#: error_messages.tmp:3
+#, python-format
+msgid "Error API: %(api)s"
+msgstr ""
+
+#: error_messages.tmp:4
+#, python-format
+msgid "Error DAO: %(dao)s:%(api)s"
+msgstr ""
+
+#: app/__init__.py:39
 msgid "Error Sample: {msg}"
 msgstr "아아아 {msg}"
 
-#: error_messages.tmp:2
-msgid "Error Sample"
-msgstr "이런"
+#~ msgid "Error Sample"
+#~ msgstr "이런"
 
-#: error_messages.tmp:3
-msgid "Error API: {api}"
-msgstr "aaaaaaaaa {api}"
+#~ msgid "Error API: {api}"
+#~ msgstr "aaaaaaaaa {api}"
 
-#: error_messages.tmp:4
-msgid "Error DAO: {dao}:{api}"
-msgstr "bbbbbbbb {dao}:{api}"
+#~ msgid "Error DAO: {dao}:{api}"
+#~ msgstr "bbbbbbbb {dao}:{api}"
 

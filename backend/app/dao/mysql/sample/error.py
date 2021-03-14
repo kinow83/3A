@@ -6,5 +6,5 @@ class Error(DAO):
     def get_error(self):
         print(self.p)
         print(self.m)
-        raise ApiException(*ERR.ERROR_SAMPLE, {"msg": "This is DAOError test"})
+        raise ApiException(*ERR.ERROR_DAO, {"dao": "mysql", "api": "sample"})
         return {"TEST": "OK"}

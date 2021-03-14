@@ -11,10 +11,9 @@ class APIError(API):
     def init_dao(self):
         pass
 
-    @api_error_check
     def get(self):        
         raise ApiException(*ERR.ERROR_SAMPLE, {"msg": "This is APIError test"})
-        return self.call("")
+        return self.dao_call("")
 
 class DAOError(API):
     def init_dao(self):
@@ -23,4 +22,4 @@ class DAOError(API):
         }
 
     def get(self):
-        return self.call("get_error")
+        return self.dao_call("get_error")

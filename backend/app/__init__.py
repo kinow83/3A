@@ -11,10 +11,8 @@ class JSONEncoder(BaseEncoder):
     def default(self, o):
         if isinstance(o, _LazyString):
             return text_type(o)
-
         return BaseEncoder.default(self, o)
         
-
 
 def create_app():
     b = babel.Babel()
@@ -31,17 +29,9 @@ def create_app():
     with app.app_context():
         assert isinstance(get_translations(), NullTranslations)
     
-    app.config.update({
-        'BABEL_TRANSLATION_DIRECTORIES': 'translations',
-        'BABEL_DEFAULT_LOCALE': 'ko'
-    })
-    
-    print(app.config['BABEL_DEFAULT_LOCALE'])
-    print(app.config['BABEL_DEFAULT_TIMEZONE'])
-    print(app.config['BABEL_TRANSLATION_DIRECTORIES'])
-
-    lazy_string = gettext('Error Sample')
-    print(lazy_string)
+    '''
+    https://github.com/python-babel/flask-babel/tree/master/tests
+    '''
 
     app.json_encoder = JSONEncoder
 

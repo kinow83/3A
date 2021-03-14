@@ -21,13 +21,15 @@ class API(Resource):
         self.dao_mapper = {}
         self.init_dao()
 
+        '''
+        add api_error_check decorator to [get/put/post/delete] method
+        '''
+        for attr in dir(self):            
+            if callable(getattr(self, attr)) and attr and attr in ['get', 'put', 'post', 'delete', 'dao_call']:
+                setattr(self.__class__, attr, api_error_check(getattr(self.__class__, attr)))
 
-    def init_dao(self):
-        pass
 
-
-    @api_error_check
-    def call(self, method):
+    def dao_call(self, method):
         daos = self.dao_mapper.get(method)
         if not daos:
             daos = self.dao_mapper.get("default")
